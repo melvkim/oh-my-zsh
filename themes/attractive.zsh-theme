@@ -1,25 +1,51 @@
-# AVIT ZSH Theme
+# Attractive
 
+# aliases to use in this code
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+  eval FONT_$color='%{$fg[${(L)color}]%}'
+done
+eval FONT_NO_COLOR="%{$terminfo[sgr0]%}"
+eval FONT_BOLD="%{$terminfo[bold]%}"
+
+# main prompt settings
 PROMPT='
-$(_user_host)${_current_dir} $(git_prompt_info) $(_ruby_version)
-▶ '
+$(_date_and_time) $(_user_host)${_current_dir} $(git_prompt_info) $(_ruby_version)
+$(_prompt_sign)'
 
-PROMPT2='%{$fg[grey]%}◀%{$reset_color%} '
+#PROMPT2='%{$fg[grey]%}◀%{$reset_color%} '
 
-RPROMPT='$(_vi_status)%{$(echotc UP 1)%}$(_git_time_since_commit) $(git_prompt_status) ${_return_status}%{$(echotc DO 1)%}'
+RPROMPT='$(_vi_status)%{$(echotc UP 1)%} $(_git_time_since_commit) $(git_prompt_status) ${_return_status}%{$(echotc DO 1)%}'
+
 
 local _current_dir="%{$fg[blue]%}%3~%{$reset_color%} "
-local _return_status="%{$fg[red]%}%(?..⍉)%{$reset_color%}"
+local _return_status="%{$fg[red]%}%(?..!)%{$reset_color%}"
 local _hist_no="%{$fg[grey]%}%h%{$reset_color%}"
 
-function _user_host() {
-  if [[ -n $SSH_CONNECTION ]]; then
-    me="%n@%m"
-  elif [[ $LOGNAME != $USER ]]; then
-    me="%n"
+function _date_and_time() {
+  date "+‹%Y.%m.%d %H:%M:%S›"
+}
+
+function _prompt_sign() {
+  if [[ $USER == "root" ]]; then
+    echo "${FONT_BOLD}%{$fg[red]%}# %{$reset_color%}"
+  else 
+    echo "${FONT_BOLD}%{$fg[green]%}$ %{$reset_color%}"
   fi
-  if [[ -n $me ]]; then
-    echo "%{$fg[cyan]%}$me%{$reset_color%}:"
+}
+
+function _user_host() {
+  local _me=''
+
+  if [[ -n $SSH_CONNECTION || -n $SSH_CLIENT || -n $SSH2_CLIENT ]]; then # We're on SSH
+    _me="%n@%m"
+  else 
+    _me="%n"
+  fi
+
+  if [[ ${USER} == 'root' ]]; then
+    echo "%{$fg[red]%}${_me}%{$reset_color%}:"
+  elif [[ -n ${_me} ]]; then
+    echo "%{$fg[green]%}${_me}%{$reset_color%}:"
   fi
 }
 
@@ -31,8 +57,8 @@ function _vi_status() {
 
 function _ruby_version() {
   if {echo $fpath | grep -q "plugins/rvm"};
-  	then
-  	
+    then
+    
     echo "%{$fg[grey]%}$(rvm_prompt_info)%{$reset_color%}"
   fi
 }
