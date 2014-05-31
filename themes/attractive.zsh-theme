@@ -119,7 +119,7 @@ function _git_time_since_commit() {
         color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_LONG
       fi
 
-      # Colorize and
+      # Colorize and 
       echo "Last Commited $(git_prompt_status) $color$commit_age ago%{$reset_color%}"
     fi
   fi
