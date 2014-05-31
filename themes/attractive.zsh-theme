@@ -1,34 +1,29 @@
-# Attractive
-
-# aliases to use in this code
-for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-  eval FONT_$color='%{$fg[${(L)color}]%}'
-done
-eval FONT_NO_COLOR="%{$terminfo[sgr0]%}"
-eval FONT_BOLD="%{$terminfo[bold]%}"
+# Attractive theme
+# This theme is inspired by "agonster theme"
 
 # main prompt settings
 PROMPT='
 $(_date_and_time) $(_user_host)${_current_dir} $(git_prompt_info) $(_ruby_version)
 ${_return_status}$(_prompt_sign)'
 
-#PROMPT2='%{$fg[grey]%}◀%{$reset_color%} '
-
 RPROMPT='$(_vi_status)%{$(echotc UP 1)%} \
     $(_git_time_since_commit) %{$(echotc DO 1)%}'
 
-local _current_dir="%{$fg[blue]%}%3~%{$reset_color%} "
-local _return_status="%{$fg[red]%}%(?..!)%{$reset_color%}"
-local _hist_no="%{$fg[grey]%}%h%{$reset_color%}"
 
 function _date_and_time() {
+  # Display date and time.
+  # Example: "2014.05.31 15:25:53"
   date "+‹%Y.%m.%d %H:%M:%S›"
 }
 
 function _prompt_sign() {
   if [[ $USER == "root" ]]; then
+    # Display caret sign, "#", when root user is logged in.
+    # Example: "#"
     echo "${FONT_BOLD}%{$fg[red]%}# %{$reset_color%}"
   else 
+    # Display caret sign, "$", when non-root user is logged in.
+    # Example: "$"
     echo "${FONT_BOLD}%{$fg[green]%}$ %{$reset_color%}"
   fi
 }
@@ -36,29 +31,41 @@ function _prompt_sign() {
 function _user_host() {
   local _me=''
 
-  if [[ -n $SSH_CONNECTION || -n $SSH_CLIENT || -n $SSH2_CLIENT ]]; then # We're on SSH
+  if [[ -n $SSH_CONNECTION || -n $SSH_CLIENT || -n $SSH2_CLIENT ]]; then
+    # Display username and computer name, when we're on SSH
+    # Example: "melvkim@osx"
     _me="%n@%m"
   else 
+    # Display username only, when we're not on SSH
+    # Example: "melvkim"
     _me="%n"
   fi
 
   if [[ ${USER} == 'root' ]]; then
+    # Colorize caret sign, "$", in red, when root user is logged in.
     echo "%{$fg[red]%}${_me}%{$reset_color%}:"
   elif [[ -n ${_me} ]]; then
+    # Colorize caret sign, "$", in red, when non-user is logged in.
     echo "%{$fg[green]%}${_me}%{$reset_color%}:"
   fi
 }
 
 function _vi_status() {
   if {echo $fpath | grep -q "plugins/vi-mode"}; then
+    
+    # Display vim mode
+    # NOTE: not fully tested. Use it with your own discretion.
     echo "$(vi_mode_prompt_info)"
   fi
 }
+
 
 function _ruby_version() {
   if {echo $fpath | grep -q "plugins/rvm"};
     then
     
+    # Display ruby version info
+    # NOTE: not fully tested. Use it with your own discretion.
     echo "%{$fg[grey]%}$(rvm_prompt_info)%{$reset_color%}"
   fi
 }
@@ -119,11 +126,23 @@ function _git_time_since_commit() {
         color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_LONG
       fi
 
-      # Colorize and 
-      echo "Last Commited $(git_prompt_status) $color$commit_age ago%{$reset_color%}"
+      # Colorize and display commit age.
+      echo "Last Committed $(git_prompt_status) $color$commit_age ago%{$reset_color%}"
     fi
   fi
 }
+
+# Set environment variables
+local _current_dir="%{$fg[blue]%}%3~%{$reset_color%} "
+local _return_status="%{$fg[red]%}%(?..!)%{$reset_color%}"
+export GREP_COLOR='1;33'
+
+# Color settings
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+  eval FONT_$color='%{$fg[${(L)color}]%}'
+done
+eval FONT_NO_COLOR="%{$terminfo[sgr0]%}"
+eval FONT_BOLD="%{$terminfo[bold]%}"
 
 if [[ $USER == "root" ]]; then
   CARETCOLOR="red"
@@ -131,29 +150,22 @@ else
   CARETCOLOR="white"
 fi
 
-MODE_INDICATOR="%{$fg_bold[yellow]%}❮%{$reset_color%}%{$fg[yellow]%}❮❮%{$reset_color%}"
-
+# Git settings (status theme)
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 
+# Git settings (status symbols)
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}✚"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[yellow]%}⚡"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}✖"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[yellow]%}A»B"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[cyan]%}∆"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[grey]%}¿¿"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}✚%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[yellow]%}⚡%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}✖%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[yellow]%}A»B%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[cyan]%}∆%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[grey]%}¿¿%{$reset_color%}"
 
-# Colors vary depending on time lapsed.
+# Colorize  git-time-since-commit, depending on its age.
 ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT="%{$fg[green]%}"
 ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL="%{$fg[white]%}"
 ZSH_THEME_GIT_TIME_SHORT_COMMIT_MEDIUM="%{$fg[yellow]%}"
 ZSH_THEME_GIT_TIME_SINCE_COMMIT_LONG="%{$fg[red]%}"
-
-
-# LS colors, made with http://geoff.greer.fm/lscolors/
-export LSCOLORS="exfxcxdxbxegedabagacad"
-export LS_COLORS='di=34;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:'
-export GREP_COLOR='1;33'
-
