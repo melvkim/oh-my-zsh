@@ -72,29 +72,55 @@ function _git_time_since_commit() {
     # Only proceed if there is actually a commit.
     if [[ $(git log 2>&1 > /dev/null | grep -c "^fatal: bad default revision") == 0 ]]; then
       # Get the last commit.
-      last_commit=$(git log --pretty=format:'%at' -1 2> /dev/null)
-      now=$(date +%s)
-      seconds_since_last_commit=$((now-last_commit))
+      local last_commit=$(git log --pretty=format:'%at' -1 2> /dev/null)
+      local now=$(date +%s)
+      local seconds_since_last_commit=$((now-last_commit))
 
       # Totals
-      minutes=$((seconds_since_last_commit / 60))
-      hours=$((seconds_since_last_commit/3600))
+      local minutes=$((seconds_since_last_commit / 60))
+      local hours=$((seconds_since_last_commit/3600))
+      local days=$((seconds_since_last_commit / 86400))
+      local weeks=$((seconds_since_last_commit / 604800))
 
       # Sub-hours and sub-minutes
-      days=$((seconds_since_last_commit / 86400))
-      sub_hours=$((hours % 24))
-      sub_minutes=$((minutes % 60))
+      local sub_hours=$((hours % 24))
+      local sub_minutes=$((minutes % 60))
+      local sub_days=$((days % 7))
 
-      if [ $hours -gt 24 ]; then
-          commit_age="${days}d"
-      elif [ $minutes -gt 60 ]; then
-          commit_age="${sub_hours}h${sub_minutes}m"
+      if [ ${seconds_since_last_commit} -ge 0 ] && [ ${seconds_since_last_commit} -lt 10 ]; then
+        commit_age="just moments"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT
+      elif [ ${seconds_since_last_commit} -ge 10 ] && [ ${seconds_since_last_commit} -lt 60 ]; then
+        commit_age="${seconds_since_last_commit} seconds"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT
+      elif [ ${seconds_since_last_commit} -ge 60 ] && [ ${seconds_since_last_commit} -lt 120 ]; then
+        commit_age="a minute"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT
+      elif [ ${seconds_since_last_commit} -ge 120 ] && [ ${seconds_since_last_commit} -lt 3540 ]; then
+        commit_age="${sub_minutes} minutes"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT
+      elif [ ${seconds_since_last_commit} -ge 3540 ] && [ ${seconds_since_last_commit} -lt 7100 ]; then
+        commit_age="an hour"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
+      elif [ ${seconds_since_last_commit} -ge 7100 ] && [ ${seconds_since_last_commit} -lt 82800 ]; then
+        commit_age="${sub_hours} hours"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
+      elif [ ${seconds_since_last_commit} -ge 82800 ] && [ ${seconds_since_last_commit} -lt 172000 ]; then
+        commit_age="a day"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
+      elif [ ${seconds_since_last_commit} -ge 172000 ] && [ ${seconds_since_last_commit} -lt 518400 ]; then
+        commit_age="${sub_days} days"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_MEDIUM
+      elif [ ${seconds_since_last_commit} -ge 518400 ] && [ ${seconds_since_last_commit} -lt 1036800 ]; then
+        commit_age="a week"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_MEDIUM
       else
-          commit_age="${minutes}m"
+        commit_age="${weeks} weeks"
+        color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_LONG
       fi
 
-      color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
-      echo "$color$commit_age%{$reset_color%}"
+      # Colorize and
+      echo "Last Commited $(git_prompt_status) $color$commit_age ago%{$reset_color%}"
     fi
   fi
 }
@@ -121,9 +147,10 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[grey]%}◒ "
 
 # Colors vary depending on time lapsed.
 ZSH_THEME_GIT_TIME_SINCE_COMMIT_SHORT="%{$fg[green]%}"
+ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL="%{$fg[white]%}"
 ZSH_THEME_GIT_TIME_SHORT_COMMIT_MEDIUM="%{$fg[yellow]%}"
 ZSH_THEME_GIT_TIME_SINCE_COMMIT_LONG="%{$fg[red]%}"
-ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL="%{$fg[grey]%}"
+
 
 # LS colors, made with http://geoff.greer.fm/lscolors/
 export LSCOLORS="exfxcxdxbxegedabagacad"
