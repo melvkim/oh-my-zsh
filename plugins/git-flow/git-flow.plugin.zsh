@@ -22,9 +22,30 @@
 
 #Alias
 alias gf='git flow'
+alias gfi='git flow init'
 alias gcd='git checkout develop'
 alias gch='git checkout hotfix'
 alias gcr='git checkout release'
+
+alias gff='git flow feature list -v'
+alias gffs='git flow feature start'
+alias gffp='git flow feature publish'
+alias gfff='git flow feature finish'
+alias gffd='git flow feature diff'
+alias gffc='git flow feature checkout'
+alias gfft='git flow feature track'
+alias gffr='git flow feature rebase'
+alias gffp='git flow feature pull'
+
+alias gfr='git flow release list -v'
+alias gfrs='git flow release start'
+alias gfrf='git flow release finish'
+alias gfrp='git flow release publish'
+alias gfrt='git flow release track'
+
+alias gfh='git flow hotfix list -v'
+alias gfhs='git flow hotfix start'
+alias gfhf='git flow hotfix finish'
 
 _git-flow ()
 {
