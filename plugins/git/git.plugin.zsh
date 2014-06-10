@@ -13,7 +13,9 @@ alias gup='git pull --rebase'
 compdef _git gup=git-fetch
 alias gp!='git push'
 compdef _git gp!=git-push
-alias gp!='git push origin master'
+alias gpom='git push origin master'
+compdef _git gpom=git-push
+alias gpom!='git push -f origin master'
 compdef _git gpom!=git-push
 alias gd='git diff'
 gdv() { git diff -w "$@" | view - }

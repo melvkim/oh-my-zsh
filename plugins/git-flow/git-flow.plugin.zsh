@@ -47,7 +47,8 @@ alias gfh='git flow hotfix list -v'
 alias gfhs='git flow hotfix start'
 alias gfhf!='git flow hotfix finish'
 
-alias gpod!='git push origin develop'
+alias gpod='git push origin develop'
+alias gpod!='git push -f origin develop'
 
 _git-flow ()
 {
