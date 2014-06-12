@@ -133,8 +133,8 @@ function _git_time_since_commit() {
 }
 
 # Set environment variables
-local _current_dir="%{$fg[blue]%}%3~%{$reset_color%} "
-local _return_status="%{$fg[red]%}%(?..!)%{$reset_color%}"
+_current_dir="%{$fg[blue]%}%3~%{$reset_color%} "
+_return_status="%{$fg[red]%}%(?..!)%{$reset_color%}"
 export GREP_COLOR='1;33'
 
 # Color settings
