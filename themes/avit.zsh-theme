@@ -40,6 +40,7 @@ function _ruby_version() {
 # Determine the time since last commit. If branch is clean,
 # use a neutral color, otherwise colors will vary according to time.
 function _git_time_since_commit() {
+<<<<<<< HEAD
   if git rev-parse --git-dir > /dev/null 2>&1; 
   then
 
@@ -70,6 +71,9 @@ function _git_time_since_commit() {
       color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
       echo "$color$commit_age%{$reset_color%}"
     fi
+
+    color=$ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL
+    echo "$color$commit_age%{$reset_color%}"
   fi
 }
 
@@ -103,4 +107,3 @@ ZSH_THEME_GIT_TIME_SINCE_COMMIT_NEUTRAL="%{$fg[grey]%}"
 export LSCOLORS="exfxcxdxbxegedabagacad"
 export LS_COLORS='di=34;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:'
 export GREP_COLOR='1;33'
-
