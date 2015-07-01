@@ -213,8 +213,8 @@ compdef _git gmum=git-merge
 
 # git reset && git clean
 alias grh!='git reset --hard'
-alias grhh!='git reset --hard HEAD'
-alias grhh1!='git reset --hard HEAD~1'
+alias grhh!='git commit -am "[backup] temporarily saving current HEAD before reset hard HEAD"; git reset --hard HEAD~1'
+alias grhh1!='git commit -am "[backup] temporarily saving current HEAD before reset hard HEAD~1"; git reset --hard HEAD~2'
 alias grs!='git reset --soft'
 alias grsh!='git reset --soft HEAD'
 alias grsh1!='git reset --soft HEAD~1'
